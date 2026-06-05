@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#085041">
+<title>ERA AntPlus CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --g1:#085041;--g2:#0F6E56;--g3:#1D9E75;--g4:#5DCAA5;--g5:#E1F5EE;--g6:#9FE1CB;
+  --a1:#854F0B;--a2:#EF9F27;--a3:#FAEEDA;--a4:#FAC775;
+  --b1:#185FA5;--b2:#378ADD;--b3:#E6F1FB;--b4:#B5D4F4;
+  --r1:#A32D2D;--r2:#E24B4A;--r3:#FCEBEB;--r4:#F7C1C1;
+  --p1:#534AB7;--p2:#7F77DD;--p3:#EEEDFE;--p4:#CECBF6;
+  --pi1:#993556;--pi2:#D4537E;--pi3:#FBEAF0;--pi4:#F4C0D1;
+  --gr1:#2C2C2A;--gr2:#5F5E5A;--gr3:#B4B2A9;--gr4:#F1EFE8;
+  --bg:#fafaf8;--surface:#ffffff;--surface2:#f5f4f0;
+  --text:#1a1a18;--text2:#5F5E5A;--text3:#B4B2A9;
+  --border:rgba(0,0,0,0.09);--border2:rgba(0,0,0,0.14);
+  --rad:8px;--radl:12px;--radxl:16px;
+  --shadow:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.05);
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#111110;--surface:#1c1c1a;--surface2:#242422;
+  --text:#f0efea;--text2:#9E9D97;--text3:#5F5E5A;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.13);
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Be Vietnam Pro',sans-serif;font-size:13px;color:var(--text);background:var(--bg);line-height:1.55}
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* ── Sidebar ── */
+.sb{width:200px;flex-shrink:0;background:var(--surface);border-right:0.5px solid var(--border);display:flex;flex-direction:column;overflow-y:auto}
+.sb-logo{padding:14px 14px 12px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:9px;flex-shrink:0}
+.sb-ic{width:28px;height:28px;background:var(--g1);border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--g6);font-size:14px;flex-shrink:0}
+.sb-brand{font-size:12px;font-weight:600;line-height:1.2;color:var(--text)}
+.sb-ver{font-size:9px;color:var(--text3);margin-top:1px}
+nav{padding:8px 6px;flex:1}
+.nav-sec{font-size:9px;color:var(--text3);padding:8px 8px 3px;text-transform:uppercase;letter-spacing:.08em;font-weight:500}
+.ni{display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:var(--rad);cursor:pointer;font-size:12px;color:var(--text2);margin-bottom:1px;transition:all .13s;white-space:nowrap;overflow:hidden;position:relative}
+.ni:hover{background:var(--surface2);color:var(--text)}
+.ni.on{background:var(--g5);color:var(--g1);font-weight:500}
+.ni.on i{color:var(--g2)}
+.ni i{font-size:15px;flex-shrink:0;transition:color .13s}
+.nb{margin-left:auto;background:var(--r2);color:#fff;font-size:9px;padding:1px 5px;border-radius:9px;font-weight:600;flex-shrink:0}
+
+/* ── Main ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:var(--bg)}
+.topbar{padding:10px 16px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:9px;background:var(--surface);flex-shrink:0}
+.tb-title{font-size:14px;font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.search-wrap{display:flex;align-items:center;gap:6px;background:var(--surface2);border:0.5px solid var(--border);border-radius:var(--rad);padding:5px 9px;max-width:220px;flex:1}
+.search-wrap input{border:none;background:transparent;font-size:12px;color:var(--text);outline:none;width:100%;font-family:'Be Vietnam Pro',sans-serif}
+.search-wrap i{font-size:14px;color:var(--text3);flex-shrink:0}
+.cnt{flex:1;overflow-y:auto;padding:16px}
+.tc{display:none}.tc.on{display:block}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:var(--rad);font-size:12px;cursor:pointer;font-weight:500;transition:all .13s;border:0.5px solid var(--border2);font-family:'Be Vietnam Pro',sans-serif;background:var(--surface);color:var(--text2)}
+.btn:hover{background:var(--surface2);color:var(--text)}
+.btn-p{background:var(--g1);color:var(--g6);border-color:var(--g1)}
+.btn-p:hover{background:var(--g2);color:var(--g6)}
+.btn-w{background:var(--a3);color:var(--a1);border-color:var(--a4)}
+.btn-d{background:var(--b3);color:var(--b1);border-color:var(--b4)}
+.btn-sm{padding:4px 9px;font-size:11px}
+
+/* ── Cards & Grid ── */
+.card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radl);padding:14px 15px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:12px}
+.metric{background:var(--surface2);border-radius:var(--rad);padding:11px 13px}
+.m-lbl{font-size:10px;color:var(--text3);margin-bottom:3px}
+.m-num{font-size:22px;font-weight:500;line-height:1;color:var(--text)}
+.m-sub{font-size:10px;color:var(--text3);margin-top:3px}
+.m-delta{font-size:10px;margin-top:3px;font-weight:500}
+.up{color:#3B6D11}.dn{color:#A32D2D}.neu{color:var(--text3)}
+
+/* ── Table ── */
+table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+th{font-size:9px;color:var(--text3);text-align:left;padding:6px 7px;border-bottom:0.5px solid var(--border);font-weight:500;text-transform:uppercase;letter-spacing:.05em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:var(--surface2)}
+td{padding:7px 7px;border-bottom:0.5px solid var(--border);vertical-align:middle;overflow:hidden;text-overflow:ellipsis}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surface2)}
+.tbl-wrap{border:0.5px solid var(--border);border-radius:var(--radl);overflow:hidden;background:var(--surface)}
+
+/* ── Badges ── */
+.bx{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500;white-space:nowrap}
+.bx-hot{background:var(--r3);color:var(--r1)}
+.bx-warm{background:var(--a3);color:var(--a1)}
+.bx-cold{background:var(--b3);color:var(--b1)}
+.bx-vip{background:var(--p3);color:var(--p1)}
+.bx-ret{background:var(--pi3);color:var(--pi1)}
+.bx-pros{background:#EAF3DE;color:#3B6D11}
+.bx-buy{background:var(--g5);color:var(--g1)}
+.bx-rent{background:var(--p3);color:var(--p1)}
+.bx-av{background:#EAF3DE;color:#3B6D11}
+.bx-pend{background:var(--a3);color:var(--a1)}
+.bx-sold{background:var(--gr4);color:var(--gr2)}
+
+/* ── Side Panel ── */
+.sp{width:0;flex-shrink:0;border-left:0.5px solid var(--border);display:flex;flex-direction:column;background:var(--surface);transition:width .2s ease;overflow:hidden}
+.sp.open{width:310px}
+.sp-hd{padding:10px 12px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:6px;flex-shrink:0}
+.sp-title{font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.sp-tabs{display:flex;border-bottom:0.5px solid var(--border);flex-shrink:0}
+.sp-tab{flex:1;text-align:center;padding:7px 4px;font-size:10px;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent;transition:all .13s;font-weight:400}
+.sp-tab.on{color:var(--g2);border-bottom-color:var(--g3);font-weight:500}
+.sp-body{flex:1;overflow-y:auto;padding:12px}
+.sp-sec{margin-bottom:14px}
+.sp-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;font-weight:500}
+.sp-f{font-size:12px;margin-bottom:3px;color:var(--text)}
+.sp-m{font-size:11px;color:var(--text2);line-height:1.6}
+
+/* ── AI & Alert boxes ── */
+.ai-box{background:var(--g5);border:0.5px solid var(--g4);border-radius:var(--rad);padding:10px 12px;margin-bottom:10px}
+.ai-lbl{font-size:9px;font-weight:500;color:var(--g2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.ai-txt{font-size:11px;color:var(--g1);line-height:1.65}
+.warn-box{background:var(--r3);border:0.5px solid var(--r4);border-radius:var(--rad);padding:9px 11px;margin-bottom:9px}
+.warn-t{font-size:9px;font-weight:500;color:var(--r1);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
+.warn-tx{font-size:11px;color:var(--r1)}
+.bd-warn{background:var(--pi3);border:0.5px solid var(--pi4);border-radius:var(--rad);padding:7px 10px;margin-bottom:8px;font-size:11px;color:var(--pi1)}
+
+/* ── Timeline ── */
+.tl-i{display:flex;gap:7px;margin-bottom:8px}
+.tl-d{width:7px;height:7px;border-radius:50%;background:var(--g4);flex-shrink:0;margin-top:3px}
+.tl-ti{font-size:9px;color:var(--text3);min-width:48px}
+.tl-tx{font-size:11px;color:var(--text);line-height:1.4}
+
+/* ── Tabs ── */
+.tabs{display:flex;gap:3px;margin-bottom:10px;border-bottom:0.5px solid var(--border);padding-bottom:5px}
+.tab{padding:3px 10px;border-radius:var(--rad);font-size:11px;cursor:pointer;color:var(--text2);transition:all .13s;font-weight:400}
+.tab.on{background:var(--g5);color:var(--g1);font-weight:500}
+.tab:hover:not(.on){background:var(--surface2)}
+
+/* ── Match cards ── */
+.mc{background:var(--surface2);border-radius:var(--rad);padding:9px 11px;margin-bottom:7px;border:0.5px solid var(--border);cursor:pointer;transition:all .13s}
+.mc:hover,.mc.sel{border-color:var(--g4);background:var(--g5)}
+.mc.sel{border:1.5px solid var(--g3)}
+.mc-sc{font-size:9px;font-weight:500;color:var(--g2);margin-bottom:2px}
+.mc-t{font-size:12px;font-weight:500;color:var(--text)}
+.mc-s{font-size:10px;color:var(--text3);margin-top:2px}
+
+/* ── Reminders ── */
+.rc{border:0.5px solid var(--border);border-radius:var(--rad);padding:9px 11px;margin-bottom:8px;background:var(--surface);cursor:pointer;transition:all .13s}
+.rc:hover{border-color:var(--border2)}
+.rc.urg{border-color:var(--r4);background:var(--r3)}
+.rc.wrn{border-color:var(--a4);background:var(--a3)}
+.rc-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.rc-n{font-size:12px;font-weight:500}
+.rc-d{font-size:10px;font-weight:500}
+
+/* ── Modal ── */
+.mo-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto}
+.mo-bg.on{display:flex}
+.mo-box{background:var(--surface);border-radius:var(--radxl);border:0.5px solid var(--border);width:100%;max-width:480px;padding:20px;flex-shrink:0}
+.mo-hd{font-size:14px;font-weight:500;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;color:var(--text)}
+.fg{margin-bottom:10px}
+.fl{font-size:10px;color:var(--text2);margin-bottom:3px;display:block;font-weight:500}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+input,select,textarea{width:100%;font-size:12px;font-family:'Be Vietnam Pro',sans-serif;padding:6px 9px;border:0.5px solid var(--border2);border-radius:var(--rad);background:var(--surface2);color:var(--text);outline:none;transition:border-color .13s}
+input:focus,select:focus,textarea:focus{border-color:var(--g4)}
+textarea{height:58px;resize:none}
+.sec-hd{font-size:9px;font-weight:600;color:var(--g2);text-transform:uppercase;letter-spacing:.08em;margin:12px 0 7px;padding-bottom:4px;border-bottom:0.5px solid var(--g5);display:flex;align-items:center;gap:4px}
+.dup-w{background:var(--r3);border:0.5px solid var(--r4);border-radius:var(--rad);padding:7px 10px;margin-bottom:7px;font-size:10px;color:var(--r1);display:none}
+
+/* ── AI Parse ── */
+.pa{border:1.5px dashed var(--g4);border-radius:var(--rad);padding:10px;background:var(--g5);margin-bottom:9px}
+.pa textarea{background:transparent;border:none;font-size:12px;height:55px;padding:0;color:var(--g1)}
+.pa textarea::placeholder{color:var(--g3);font-style:italic}
+.pr{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}
+.pr-i{background:var(--surface);border-radius:5px;padding:6px 8px;border:0.5px solid var(--g4)}
+.pr-k{font-size:9px;color:var(--g2);text-transform:uppercase;letter-spacing:.06em}
+.pr-v{font-size:12px;font-weight:500;color:var(--g1);margin-top:1px;word-break:break-word}
+
+/* ── Misc ── */
+.spin{display:inline-block;width:10px;height:10px;border:2px solid var(--g4);border-top-color:var(--g1);border-radius:50%;animation:rot .6s linear infinite;vertical-align:middle}
+@keyframes rot{to{transform:rotate(360deg)}}
+.ab{background:transparent;border:none;cursor:pointer;color:var(--text3);padding:3px 4px;border-radius:5px;font-size:13px;transition:all .13s;font-family:'Be Vietnam Pro',sans-serif}
+.ab:hover{background:var(--surface2);color:var(--text)}
+.empty{text-align:center;padding:32px 16px;color:var(--text3)}
+.empty i{font-size:26px;margin-bottom:7px;display:block;opacity:.3}
+.empty p{font-size:12px}
+.status-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.seg-btn{padding:3px 8px;border-radius:var(--rad);font-size:10px;cursor:pointer;border:0.5px solid var(--border2);background:transparent;color:var(--text2);transition:all .13s;font-family:'Be Vietnam Pro',sans-serif}
+.seg-btn:hover{background:var(--surface2)}
+.seg-btn.on{background:var(--g1);color:var(--g6);border-color:var(--g1)}
+.prog-bar{height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;margin-top:4px}
+.prog-fill{height:100%;border-radius:2px;transition:width .4s}
+.rank-row{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:0.5px solid var(--border)}
+.rank-row:last-child{border-bottom:none}
+.rank-name{flex:1;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank-bar-wrap{width:70px;flex-shrink:0}
+.rank-bar{height:4px;background:var(--surface2);border-radius:2px;overflow:hidden}
+.rank-fill{height:100%;border-radius:2px}
+.rank-val{font-size:10px;color:var(--text3);min-width:24px;text-align:right;flex-shrink:0}
+.hm-wrap{overflow-x:auto;padding-bottom:4px}
+.hm-grid{display:grid;gap:2px;grid-template-rows:repeat(7,10px);grid-auto-flow:column;grid-auto-columns:10px;width:max-content}
+.hm-cell{border-radius:2px;width:10px;height:10px}
+.quote-preview{background:var(--surface2);border-radius:var(--rad);padding:11px;font-size:12px;white-space:pre-wrap;line-height:1.7;max-height:220px;overflow-y:auto;color:var(--text)}
+.img-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}
+.img-item{border-radius:5px;overflow:hidden;border:0.5px solid var(--border);height:65px;display:flex;align-items:center;justify-content:center;background:var(--surface2)}
+.img-item img{width:100%;height:100%;object-fit:cover}
+.tag{font-size:10px;padding:2px 8px;border-radius:20px;background:var(--surface2);color:var(--text2);border:0.5px solid var(--border)}
+.seg-bar{display:flex;border-radius:3px;overflow:hidden;height:6px;margin-bottom:5px}
+.seg-s{height:6px;transition:width .4s}
+.alert-item{display:flex;align-items:flex-start;gap:7px;padding:6px 0;border-bottom:0.5px solid var(--border);font-size:11px;line-height:1.5;color:var(--text)}
+.alert-item:last-child{border-bottom:none}
+.alert-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.period-tabs{display:flex;gap:2px;margin-bottom:0}
+.period-tab{padding:4px 9px;border-radius:var(--rad);font-size:10px;cursor:pointer;color:var(--text2);border:none;background:transparent;font-family:'Be Vietnam Pro',sans-serif;transition:all .13s}
+.period-tab.on{background:var(--surface2);color:var(--text);font-weight:500}
+.period-tab:hover:not(.on){background:var(--surface2)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--text3)}
+
+/* ── Mobile responsive ── */
+@media(max-width:700px){
+  .sb{display:none}
+  .sp.open{width:100vw;position:fixed;inset:0;z-index:100}
+  .g4{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:1fr}
+  .g2{grid-template-columns:1fr}
+  .fr2,.fr3{grid-template-columns:1fr}
+  .cnt{padding:10px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<div class="sb">
+  <div class="sb-logo">
+    <div class="sb-ic"><i class="ti ti-building-estate" aria-hidden="true"></i></div>
+    <div><div class="sb-brand">ERA AntPlus</div><div class="sb-ver">CRM Elite v1.0</div></div>
+  </div>
+  <nav>
+    <div class="nav-sec">Chính</div>
+    <div class="ni on" onclick="go('dash')"><i class="ti ti-layout-dashboard" aria-hidden="true"></i>Tổng quan</div>
+    <div class="ni" onclick="go('rhythm')"><i class="ti ti-activity" aria-hidden="true"></i>Nhịp độ làm việc</div>
+    <div class="ni" onclick="go('leads')"><i class="ti ti-users" aria-hidden="true"></i>Khách hàng</div>
+    <div class="ni" onclick="go('listings')"><i class="ti ti-home" aria-hidden="true"></i>Giỏ hàng ký gửi</div>
+    <div class="nav-sec">AI Tools</div>
+    <div class="ni" onclick="go('parse')"><i class="ti ti-wand" aria-hidden="true"></i>Nhập liệu AI</div>
+    <div class="ni" onclick="go('match')"><i class="ti ti-arrows-exchange" aria-hidden="true"></i>Ghép khách – BĐS</div>
+    <div class="ni" onclick="go('query')"><i class="ti ti-message-search" aria-hidden="true"></i>Tìm bằng văn bản</div>
+    <div class="ni" onclick="go('quote')"><i class="ti ti-file-invoice" aria-hidden="true"></i>Xuất báo giá AI</div>
+    <div class="ni" onclick="go('remind')"><i class="ti ti-bell" aria-hidden="true"></i>Nhắc chăm sóc<span class="nb" id="rb">0</span></div>
+    <div class="nav-sec">Xuất dữ liệu</div>
+    <div class="ni" onclick="exportCSV('leads')"><i class="ti ti-download" aria-hidden="true"></i>Xuất Khách CSV</div>
+    <div class="ni" onclick="exportCSV('listings')"><i class="ti ti-download" aria-hidden="true"></i>Xuất Giỏ hàng</div>
+  </nav>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-title" id="tb-t">Tổng quan</div>
+    <div class="search-wrap"><i class="ti ti-search" aria-hidden="true"></i><input id="sq" placeholder="Tìm kiếm..." oninput="doSearch(this.value)"></div>
+    <button class="btn btn-p" onclick="openAdd()"><i class="ti ti-plus" aria-hidden="true"></i><span id="add-lbl">Thêm</span></button>
+  </div>
+  <div class="cnt" id="cnt-area">
+
+    <!-- DASHBOARD -->
+    <div class="tc on" id="tc-dash">
+      <div class="g4">
+        <div class="metric"><div class="m-lbl">Khách hàng</div><div class="m-num" id="s-l">0</div><div class="m-sub">đang theo dõi</div></div>
+        <div class="metric"><div class="m-lbl">Giỏ hàng</div><div class="m-num" id="s-ls">0</div><div class="m-sub">BĐS ký gửi</div></div>
+        <div class="metric"><div class="m-lbl">Chăm gấp</div><div class="m-num" id="s-h" style="color:var(--r2)">0</div><div class="m-sub">quá 7 ngày</div></div>
+        <div class="metric"><div class="m-lbl">Sinh nhật</div><div class="m-num" id="s-bd" style="color:var(--pi2)">0</div><div class="m-sub">trong 7 ngày</div></div>
+      </div>
+      <div class="g2" style="margin-bottom:10px">
+        <div><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;font-weight:500">Cần chăm gấp</div><div id="d-rem"></div></div>
+        <div><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;font-weight:500">Phân bố khách & BĐS mới</div><div id="d-seg"></div></div>
+      </div>
+    </div>
+
+    <!-- RHYTHM DASHBOARD -->
+    <div class="tc" id="tc-rhythm">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+        <div><div style="font-size:14px;font-weight:500">Nhịp độ làm việc</div><div style="font-size:10px;color:var(--text3);margin-top:1px">Cập nhật real-time từ dữ liệu CRM</div></div>
+        <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
+          <div class="period-tabs" id="period-tabs">
+            <button class="period-tab on" onclick="setPeriod(7,this)">7 ngày</button>
+            <button class="period-tab" onclick="setPeriod(30,this)">30 ngày</button>
+            <button class="period-tab" onclick="setPeriod(90,this)">90 ngày</button>
+          </div>
+          <button class="btn btn-sm" onclick="logActivity()"><i class="ti ti-plus" aria-hidden="true"></i>Ghi hoạt động</button>
+        </div>
+      </div>
+      <div class="g4" style="margin-bottom:10px">
+        <div class="metric"><div class="m-lbl">Khách mới (kỳ)</div><div class="m-num" id="r-leads">—</div><div class="m-delta" id="r-leads-d">—</div></div>
+        <div class="metric"><div class="m-lbl">BĐS ký gửi mới</div><div class="m-num" id="r-lst">—</div><div class="m-delta" id="r-lst-d">—</div></div>
+        <div class="metric"><div class="m-lbl">Lần chăm sóc</div><div class="m-num" id="r-care">—</div><div class="m-sub">lượt ghi nhận</div></div>
+        <div class="metric"><div class="m-lbl">Streak hiện tại</div><div class="m-num" id="r-streak" style="color:var(--g2)">—</div><div class="m-sub">ngày liên tiếp</div></div>
+      </div>
+      <div class="g2" style="margin-bottom:10px">
+        <div class="card">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;font-weight:500">Hoạt động — 12 tuần gần nhất</div>
+          <div class="hm-wrap"><div class="hm-grid" id="heatmap"></div></div>
+          <div style="display:flex;gap:7px;margin-top:7px;align-items:center;flex-wrap:wrap">
+            <span style="font-size:9px;color:var(--text3)">Ít</span>
+            <div style="display:flex;gap:2px">${['#F1EFE8','#9FE1CB','#5DCAA5','#1D9E75','#085041'].map(c=>`<div style="width:9px;height:9px;border-radius:2px;background:${c}"></div>`).join('')}</div>
+            <span style="font-size:9px;color:var(--text3)">Nhiều</span>
+          </div>
+        </div>
+        <div class="card">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;font-weight:500">Streak & Thành tích</div>
+          <div id="streak-list"></div>
+        </div>
+      </div>
+      <div class="g2" style="margin-bottom:10px">
+        <div class="card">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;font-weight:500">Thu thập khách & giỏ hàng</div>
+          <div style="position:relative;width:100%;height:150px"><canvas id="chart-main" role="img" aria-label="Biểu đồ hoạt động theo ngày">Dữ liệu hoạt động.</canvas></div>
+          <div style="display:flex;gap:12px;margin-top:7px">
+            <span style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><span style="width:9px;height:9px;border-radius:2px;background:#378ADD;display:inline-block"></span>Khách mới</span>
+            <span style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><span style="width:9px;height:9px;border-radius:2px;background:#1D9E75;display:inline-block"></span>BĐS ký gửi</span>
+          </div>
+        </div>
+        <div class="card">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;font-weight:500">Biến động giỏ hàng</div>
+          <div style="position:relative;width:100%;height:150px"><canvas id="chart-lst" role="img" aria-label="Tình trạng BĐS">Tình trạng BĐS.</canvas></div>
+          <div id="lst-legend" style="display:flex;gap:10px;margin-top:7px;flex-wrap:wrap"></div>
+        </div>
+      </div>
+      <div class="g3" style="margin-bottom:10px">
+        <div class="card">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;font-weight:500">Chăm sóc theo trạng thái</div>
+          <div id="care-breakdown"></div>
+        </div>
+        <div class="card">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;font-weight:500">Phân bố khu vực</div>
+          <div id="zone-rank"></div>
+        </div>
+        <div class="card">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;font-weight:500">Mục tiêu tháng</div>
+          <div id="goals-sec"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;font-weight:500">Cảnh báo & Cơ hội</div>
+        <div class="g2"><div id="al1"></div><div id="al2"></div></div>
+      </div>
+    </div>
+
+    <!-- LEADS -->
+    <div class="tc" id="tc-leads">
+      <div class="tabs">
+        <div class="tab on" onclick="fL('all',this)">Tất cả</div>
+        <div class="tab" onclick="fL('hot',this)">HOT</div>
+        <div class="tab" onclick="fL('warm',this)">Warm</div>
+        <div class="tab" onclick="fL('cold',this)">Cold</div>
+        <div class="tab" onclick="fL('vip',this)">VIP</div>
+        <div class="tab" onclick="fL('returning',this)">Tái GD</div>
+      </div>
+      <div class="tbl-wrap"><table><thead><tr>
+        <th style="width:18%">Khách hàng</th><th style="width:9%">Phân loại</th>
+        <th style="width:9%">Nhu cầu</th><th style="width:12%">Ngân sách</th>
+        <th style="width:14%">Dự án QT</th><th style="width:13%">Khu vực</th>
+        <th style="width:9%">Trạng thái</th><th style="width:10%">Chăm cuối</th><th style="width:6%"></th>
+      </tr></thead><tbody id="tb-l"></tbody></table></div>
+    </div>
+
+    <!-- LISTINGS -->
+    <div class="tc" id="tc-listings">
+      <div class="tabs">
+        <div class="tab on" onclick="fLS('all',this)">Tất cả</div>
+        <div class="tab" onclick="fLS('sale',this)">Bán</div>
+        <div class="tab" onclick="fLS('rent',this)">Cho thuê</div>
+        <div class="tab" onclick="fLS('available',this)">Còn trống</div>
+      </div>
+      <div class="tbl-wrap"><table><thead><tr>
+        <th style="width:22%">BĐS / Dự án</th><th style="width:8%">Loại</th>
+        <th style="width:11%">Giá</th><th style="width:7%">DT</th>
+        <th style="width:10%">Khu vực</th><th style="width:9%">Trạng thái</th>
+        <th style="width:8%">Ảnh</th><th style="width:10%">Cập nhật</th><th style="width:5%"></th>
+      </tr></thead><tbody id="tb-ls"></tbody></table></div>
+    </div>
+
+    <!-- AI PARSE -->
+    <div class="tc" id="tc-parse">
+      <div style="max-width:520px">
+        <div style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.65">Dán tin nhắn Zalo/SMS — AI tự bóc tách thành dữ liệu. Hỗ trợ tiếng Việt có/không dấu.</div>
+        <div class="pa">
+          <div style="font-size:9px;font-weight:600;color:var(--g2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;display:flex;align-items:center;gap:4px"><i class="ti ti-wand" style="font-size:12px" aria-hidden="true"></i>Dán tin nhắn vào đây</div>
+          <textarea id="pi" placeholder='VD: "Chị Lan ký gửi căn 2PN Vinhomes Grand Park Q9, giá 3 tỷ tầng 15 view công viên, sổ hồng, 0912345678"&#10;Hoặc: "khach hang Nguyen Van An can thue 2pn q2 khoang 20 trieu co noi that"'></textarea>
+        </div>
+        <div style="display:flex;gap:7px;margin-bottom:12px;align-items:center;flex-wrap:wrap">
+          <button class="btn btn-p" onclick="runParse('listing')"><i class="ti ti-home" aria-hidden="true"></i>→ BĐS ký gửi</button>
+          <button class="btn btn-w" onclick="runParse('lead')"><i class="ti ti-user" aria-hidden="true"></i>→ Khách hàng</button>
+          <span id="ps" style="display:none;align-items:center;gap:5px;font-size:11px;color:var(--g2)"><span class="spin"></span>Đang phân tích...</span>
+        </div>
+        <div id="pra" style="display:none">
+          <div style="font-size:9px;font-weight:600;color:var(--g2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px">Kết quả — kiểm tra rồi lưu</div>
+          <div class="dup-w" id="pdw"></div>
+          <div class="pr" id="pf"></div>
+          <div style="display:flex;gap:7px;margin-top:10px">
+            <button class="btn btn-p" onclick="saveParsed()"><i class="ti ti-check" aria-hidden="true"></i>Lưu vào database</button>
+            <button class="btn" onclick="clearParse()">Hủy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MATCH -->
+    <div class="tc" id="tc-match">
+      <div class="g2">
+        <div><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;font-weight:500">Chọn khách</div><div id="ml" style="max-height:520px;overflow-y:auto"></div></div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+            <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;font-weight:500">BĐS phù hợp <span id="mc" style="color:var(--g3)"></span></div>
+            <button class="btn btn-sm" id="mai-btn" onclick="matchAI()" style="display:none"><i class="ti ti-robot" aria-hidden="true"></i>Gợi ý AI</button>
+          </div>
+          <div id="mr" style="max-height:520px;overflow-y:auto"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUERY -->
+    <div class="tc" id="tc-query">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.65">Tìm kiếm bằng ngôn ngữ tự nhiên — AI hiểu ý bạn.</div>
+      <div style="display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap">
+        <input id="qi" placeholder='VD: "căn 2PN dưới 5 tỷ Thủ Đức" hoặc "khách VIP cần thuê Q1"' style="flex:1;min-width:200px" onkeydown="if(event.key==='Enter')runQuery()">
+        <button class="btn btn-p" onclick="runQuery()"><i class="ti ti-search" aria-hidden="true"></i>Tìm</button>
+        <span id="qs" style="display:none;align-items:center;gap:5px;font-size:11px;color:var(--g2)"><span class="spin"></span></span>
+      </div>
+      <div id="qr"></div>
+    </div>
+
+    <!-- QUOTE -->
+    <div class="tc" id="tc-quote">
+      <div class="g2">
+        <div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.65">Chọn BĐS và khách hàng để AI tạo báo giá chuyên nghiệp.</div>
+          <div class="fg"><label class="fl">Chọn BĐS</label><select id="q-lst" onchange="updateQP()"></select></div>
+          <div class="fg"><label class="fl">Chọn khách hàng (tùy chọn)</label><select id="q-lead" onchange="updateQP()"><option value="">-- Báo giá chung --</option></select></div>
+          <div class="fg"><label class="fl">Loại báo giá</label>
+            <select id="q-type"><option value="zalo">Tin nhắn Zalo ngắn gọn</option><option value="formal">Email báo giá trang trọng</option><option value="story">Storytelling cảm xúc</option><option value="compare">Phân tích & so sánh thị trường</option></select>
+          </div>
+          <div class="fg"><label class="fl">Giọng văn</label>
+            <select id="q-tone"><option value="pro">Chuyên nghiệp, đáng tin</option><option value="friendly">Thân thiện, gần gũi</option><option value="urgent">Tạo urgency nhẹ nhàng</option></select>
+          </div>
+          <div style="display:flex;gap:7px;margin-top:6px;flex-wrap:wrap">
+            <button class="btn btn-p" onclick="genQuote()"><i class="ti ti-wand" aria-hidden="true"></i>Tạo báo giá AI</button>
+            <button class="btn btn-d" onclick="copyQuote()"><i class="ti ti-copy" aria-hidden="true"></i>Copy</button>
+            <span id="qgs" style="display:none;align-items:center;gap:5px;font-size:11px;color:var(--g2)"><span class="spin"></span>Đang tạo...</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;font-weight:500">Xem trước báo giá</div>
+          <div class="quote-preview" id="qprev">Chọn BĐS và nhấn "Tạo báo giá AI"...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REMIND -->
+    <div class="tc" id="tc-remind">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+        <div style="font-size:12px;color:var(--text2);flex:1">Danh sách khách cần chăm sóc, sắp xếp theo độ ưu tiên.</div>
+        <button class="btn btn-sm" onclick="renderRemind()"><i class="ti ti-refresh" aria-hidden="true"></i>Làm mới</button>
+      </div>
+      <div id="rl"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SIDE PANEL -->
+<div class="sp" id="sp">
+  <div class="sp-hd">
+    <div class="sp-title" id="sp-t">Chi tiết</div>
+    <div style="display:flex;gap:3px">
+      <button class="btn btn-p btn-sm" id="sp-qbtn" onclick="quickQuote()" style="display:none"><i class="ti ti-file-invoice" aria-hidden="true"></i>Báo giá</button>
+      <button class="ab" onclick="closePanel()" aria-label="Đóng panel"><i class="ti ti-x"></i></button>
+    </div>
+  </div>
+  <div class="sp-tabs" id="sp-tabs"></div>
+  <div class="sp-body" id="sp-body"></div>
+</div>
+
+<!-- MODAL -->
+<div class="mo-bg" id="mo">
+  <div class="mo-box">
+    <div class="mo-hd"><span id="m-t">Thêm mới</span><button class="ab" onclick="closeMo()" aria-label="Đóng"><i class="ti ti-x"></i></button></div>
+    <div id="m-b"></div>
+    <div style="display:flex;gap:7px;justify-content:flex-end;margin-top:14px">
+      <button class="btn" onclick="closeMo()">Hủy</button>
+      <button class="btn btn-p" onclick="saveMo()"><i class="ti ti-check"></i>Lưu</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const KL='era3_leads',KLS='era3_lst',KAL='era_act_log',KGOAL='era_goals_v2';
+let leads=[],listings=[],actLog=[],cur='dash',selL=null,fL_='all',fLS_='all',srQ='',parsedD=null,parsedT='',curLP=null,curLSP=null,spTab=0,period=7,chartMain=null,chartLst=null;
+
+const API='https://api.anthropic.com/v1/messages';
+const MDL='claude-sonnet-4-20250514';
+async function callAI(msgs,sys){
+  const body={model:MDL,max_tokens:1000,messages:msgs};
+  if(sys)body.system=sys;
+  const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const d=await r.json();
+  return d.content?.find(c=>c.type==='text')?.text||'';
+}
+
+function td(){return new Date().toISOString().split('T')[0]}
+function tdf(){const d=new Date();return`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`}
+function dAgo(d){if(!d)return 999;return Math.floor((Date.now()-new Date(d).getTime())/86400000)}
+function dateKey(n){const d=new Date();d.setDate(d.getDate()-n);return d.toISOString().split('T')[0]}
+function fmtD(iso){const d=new Date(iso);return`${d.getDate()}/${d.getMonth()+1}`}
+function ini(n){return n.split(' ').map(x=>x[0]).join('').toUpperCase().substring(0,2)}
+
+function loadAll(){
+  try{leads=JSON.parse(localStorage.getItem(KL)||'[]')}catch(e){leads=[]}
+  try{listings=JSON.parse(localStorage.getItem(KLS)||'[]')}catch(e){listings=[]}
+  try{actLog=JSON.parse(localStorage.getItem(KAL)||'[]')}catch(e){actLog=[]}
+  if(!leads.length)seedL();
+  if(!listings.length)seedLS();
+  if(!actLog.length)seedAL();
+}
+function saveD(){localStorage.setItem(KL,JSON.stringify(leads));localStorage.setItem(KLS,JSON.stringify(listings))}
+function saveAL(){localStorage.setItem(KAL,JSON.stringify(actLog))}
+
+function seedL(){
+  leads=[
+    {id:1,name:'Nguyễn Văn An',phone:'0912 345 678',email:'an@gmail.com',segment:'hot',type:'buy',budget:'3-5 tỷ',area:'Thủ Đức, Bình Thạnh',projects:'Vinhomes Grand Park, Masteri',purpose:'Ở thực',notes:'Có 2 con nhỏ, ưu tiên gần metro và trường quốc tế',birthday:'1985-03-15',job:'Giám đốc KD',company:'ABC Corp',family:'Vợ + 2 con',postTxnStatus:'',txnHistory:[],lastContact:'2025-05-26',history:[{date:'26/05',note:'Xem nhà mẫu, thích view cao'}]},
+    {id:2,name:'Trần Thị Bích',phone:'0938 222 111',email:'bich@yahoo.com',segment:'vip',type:'rent',budget:'15-25 tr/tháng',area:'Quận 1, Quận 3',projects:'The Riviera, Saigon Royal',purpose:'Ở thuê (Expat)',notes:'Expat Nhật, công ty trả, cần 2PN full nội thất, tầng cao',birthday:'1980-07-22',job:'Giám đốc CN',company:'Toyota VN',family:'1 mình',postTxnStatus:'returning',txnHistory:[{date:'2024-03',note:'Ký thuê Masteri Q2 18tr/tháng'}],lastContact:'2025-05-30',history:[{date:'30/05',note:'Hết HĐ cũ, tìm chỗ mới Q3'}]},
+    {id:3,name:'Lê Minh Khoa',phone:'0909 777 333',email:'',segment:'cold',type:'buy',budget:'8-12 tỷ',area:'Quận 7, Nhà Bè',projects:'Song Khang, Sunrise City',purpose:'Đầu tư cho thuê',notes:'Biệt thự lớn, pháp lý sạch, không vội',birthday:'1978-11-30',job:'Doanh nhân',company:'Cty gia đình',family:'Vợ + 3 con',postTxnStatus:'',txnHistory:[],lastContact:'2025-05-10',history:[{date:'10/05',note:'Xem dự án, chưa quyết định'}]},
+    {id:4,name:'Phạm Thu Hà',phone:'0977 888 555',email:'ha.pham@gmail.com',segment:'warm',type:'buy',budget:'5-7 tỷ',area:'Gò Vấp, Tân Bình',projects:'Akari City, Flora Novia',purpose:'Ở thực cho con',notes:'Gần trường quốc tế, sổ hồng',birthday:'1970-06-08',job:'Giảng viên',company:'ĐH Bách Khoa',family:'Chồng + 1 con',postTxnStatus:'',txnHistory:[],lastContact:'2025-06-02',history:[{date:'02/06',note:'Referral từ chị Bích'}]},
+    {id:5,name:'Vũ Đức Thịnh',phone:'0855 999 777',email:'thinh@biz.vn',segment:'vip',type:'buy',budget:'15-25 tỷ',area:'Quận 2, Bình Thạnh',projects:'The Metropole, Estella Heights',purpose:'Đầu tư + ở',notes:'Đã mua căn Masteri 2023, muốn mua thêm đầu tư',birthday:'1975-12-25',job:'CEO',company:'Thịnh Group',family:'Vợ + 2 con',postTxnStatus:'returning',txnHistory:[{date:'2023-08',note:'Mua Masteri 6.2 tỷ, HH 62tr'}],lastContact:'2025-05-15',history:[{date:'15/05',note:'Trao đổi kế hoạch đầu tư Q4'}]}
+  ];saveD();
+}
+function seedLS(){
+  listings=[
+    {id:1,title:'Căn hộ Masteri Thảo Điền 2PN',project:'Masteri Thảo Điền',type:'rent',price:'22 tr/tháng',priceNum:22,area:'75m²',zone:'Quận 2',status:'available',owner:'Nguyễn Trọng',phone:'0911 000 111',notes:'View sông, full nội thất, tầng 18, ban công rộng',images:['https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=300&q=70'],updated:'2025-06-01',history:[{date:'01/06',note:'Chủ xác nhận sẵn sàng ký'}]},
+    {id:2,title:'Nhà phố Bình Thạnh 4x15m',project:'Độc lập',type:'sale',price:'6.8 tỷ',priceNum:6800,area:'180m²',zone:'Bình Thạnh',status:'available',owner:'Trần Văn B',phone:'0922 333 444',notes:'3 lầu, đường 8m, sổ hồng, gần chợ',images:[],updated:'2025-05-29',history:[{date:'29/05',note:'Chủ đồng ý thương lượng'}]},
+    {id:3,title:'Căn hộ Vinhomes Grand Park 3PN',project:'Vinhomes Grand Park',type:'sale',price:'4.5 tỷ',priceNum:4500,area:'88m²',zone:'Thủ Đức',status:'pending',owner:'Lê Thị C',phone:'0933 555 666',notes:'Nội thất cơ bản, view công viên, tầng 22',images:['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=300&q=70'],updated:'2025-05-25',history:[{date:'25/05',note:'Khách đặt cọc 50 triệu'}]},
+    {id:4,title:'Biệt thự Song Khang Q7',project:'Song Khang',type:'sale',price:'18 tỷ',priceNum:18000,area:'350m²',zone:'Quận 7',status:'available',owner:'Gia đình Hội',phone:'0944 777 888',notes:'Biệt thự đơn lập, hồ bơi riêng, sân 150m²',images:['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=300&q=70'],updated:'2025-06-02',history:[{date:'02/06',note:'Ký hợp đồng ký gửi'}]},
+    {id:5,title:'Căn hộ The Riviera 2PN',project:'The Riviera',type:'rent',price:'18 tr/tháng',priceNum:18,area:'68m²',zone:'Quận 1',status:'available',owner:'Expat Pháp',phone:'0966 111 222',notes:'Full nội thất Châu Âu, tầng cao, view thành phố',images:[],updated:'2025-06-01',history:[{date:'01/06',note:'Chủ rao mới'}]}
+  ];saveD();
+}
+function seedAL(){
+  const now=Date.now(),types=['lead','listing','care','lead','care','listing','care','lead'];
+  for(let i=83;i>=0;i--){
+    if(Math.random()>0.3){
+      const cnt=Math.floor(Math.random()*3)+1;
+      for(let j=0;j<cnt;j++){
+        const t=types[Math.floor(Math.random()*types.length)];
+        const d=new Date(now-i*86400000);
+        actLog.push({type:t,date:d.toISOString().split('T')[0],note:t==='lead'?'Thêm khách':t==='listing'?'Thêm BĐS':'Chăm sóc'});
+      }
+    }
+  }
+  saveAL();
+}
+
+const segMap={hot:{l:'HOT',c:'bx-hot'},warm:{l:'Warm',c:'bx-warm'},cold:{l:'Cold',c:'bx-cold'},vip:{l:'VIP',c:'bx-vip'},returning:{l:'Tái GD',c:'bx-ret'},prospect:{l:'Prospect',c:'bx-pros'}};
+function sBx(s){const m=segMap[s]||{l:s,c:'bx-cold'};return`<span class="bx ${m.c}">${m.l}</span>`}
+
+function go(t){
+  cur=t;
+  document.querySelectorAll('.tc').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.ni').forEach(x=>x.classList.remove('on'));
+  document.getElementById('tc-'+t).classList.add('on');
+  const map={dash:0,rhythm:1,leads:2,listings:3,parse:4,match:5,query:6,quote:7,remind:8};
+  document.querySelectorAll('.ni')[map[t]]?.classList.add('on');
+  const titles={dash:'Tổng quan',rhythm:'Nhịp độ làm việc',leads:'Khách hàng',listings:'Giỏ hàng ký gửi',parse:'Nhập liệu AI',match:'Ghép khách – BĐS',query:'Tìm bằng văn bản',quote:'Xuất báo giá AI',remind:'Nhắc chăm sóc'};
+  document.getElementById('tb-t').textContent=titles[t];
+  document.getElementById('add-lbl').textContent=t==='listings'?'+ BĐS':t==='leads'?'+ Khách':'Thêm';
+  if(t==='quote')popQSelects();
+  if(t==='rhythm')renderRhythm();
+  closePanel();renderMain();
+}
+
+function renderMain(){
+  updateStats();
+  if(cur==='dash')renderDash();
+  if(cur==='leads')renderLeads();
+  if(cur==='listings')renderListings();
+  if(cur==='match')renderMatch();
+  if(cur==='remind')renderRemind();
+  updateRB();
+}
+
+function updateStats(){
+  const ov=leads.filter(l=>dAgo(l.lastContact)>7).length;
+  const av=listings.filter(l=>l.status==='available').length;
+  const bd=leads.filter(l=>{if(!l.birthday)return false;const b=new Date(l.birthday),n=new Date();b.setFullYear(n.getFullYear());return Math.ceil((b-n)/86400000)>=0&&Math.ceil((b-n)/86400000)<=7}).length;
+  document.getElementById('s-l').textContent=leads.length;
+  document.getElementById('s-ls').textContent=listings.length;
+  document.getElementById('s-h').textContent=ov;
+  document.getElementById('s-bd').textContent=bd;
+}
+function updateRB(){
+  const c=leads.filter(l=>dAgo(l.lastContact)>7).length;
+  const rb=document.getElementById('rb');rb.textContent=c;rb.style.display=c?'':'none';
+}
+
+function renderDash(){
+  const urg=leads.filter(l=>dAgo(l.lastContact)>3).sort((a,b)=>dAgo(b.lastContact)-dAgo(a.lastContact)).slice(0,4);
+  document.getElementById('d-rem').innerHTML=urg.length?urg.map(l=>{
+    const da=dAgo(l.lastContact),cls=da>7?'urg':'wrn';
+    return`<div class="rc ${cls}" onclick="showLP(${l.id})"><div class="rc-h"><span class="rc-n">${l.name}</span><span class="rc-d" style="color:${da>7?'var(--r1)':'var(--a1)'}">${da}ng</span></div><div style="font-size:10px;color:var(--text2)">${l.type==='buy'?'Mua':'Thuê'} · ${l.budget}</div></div>`;
+  }).join(''):`<div class="empty"><i class="ti ti-check" aria-hidden="true"></i><p>Tất cả được chăm tốt!</p></div>`;
+  const segs={};leads.forEach(l=>segs[l.segment]=(segs[l.segment]||0)+1);
+  const total=leads.length||1;
+  const colors={hot:'#E24B4A',warm:'#EF9F27',cold:'#378ADD',vip:'#7F77DD',returning:'#D4537E',prospect:'#639922'};
+  document.getElementById('d-seg').innerHTML=`
+    <div class="seg-bar" style="margin-bottom:6px">${Object.entries(segs).filter(([,v])=>v>0).map(([k,v])=>`<div class="seg-s" style="width:${Math.round(v/total*100)}%;background:${colors[k]||'#888'}"></div>`).join('')}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px">${Object.entries(segs).filter(([,v])=>v>0).map(([k,v])=>`${sBx(k)} <span style="font-size:10px;color:var(--text3);margin-right:3px">${v}</span>`).join('')}</div>
+    <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;font-weight:500">BĐS mới nhất</div>
+    ${listings.slice(-3).reverse().map(l=>`<div class="mc" onclick="showLSP(${l.id})"><div style="display:flex;justify-content:space-between"><span class="mc-t">${l.title}</span>${l.status==='available'?'<span class="bx bx-av">Trống</span>':l.status==='pending'?'<span class="bx bx-pend">Cọc</span>':'<span class="bx bx-sold">Xong</span>'}</div><div class="mc-s">${l.price} · ${l.zone}</div></div>`).join('')}`;
+}
+
+function renderLeads(){
+  let data=leads;
+  if(fL_!=='all')data=data.filter(l=>l.segment===fL_||l.postTxnStatus===fL_);
+  if(srQ)data=data.filter(l=>[l.name,l.phone,l.area,l.notes,l.projects||''].join(' ').toLowerCase().includes(srQ));
+  const tb=document.getElementById('tb-l');
+  if(!data.length){tb.innerHTML=`<tr><td colspan="9"><div class="empty"><i class="ti ti-user-off" aria-hidden="true"></i><p>Không có khách</p></div></td></tr>`;return}
+  tb.innerHTML=data.map(l=>{
+    const da=dAgo(l.lastContact);
+    return`<tr onclick="showLP(${l.id})" style="cursor:pointer">
+      <td><div style="font-weight:500">${l.name}</div><div style="font-size:10px;color:var(--text3)">${l.phone}</div></td>
+      <td>${sBx(l.postTxnStatus||l.segment)}</td>
+      <td>${l.type==='buy'?'<span class="bx bx-buy">Mua</span>':'<span class="bx bx-rent">Thuê</span>'}</td>
+      <td style="color:var(--text2)">${l.budget}</td>
+      <td style="color:var(--g2);font-size:11px">${l.projects||'—'}</td>
+      <td style="font-size:11px">${(l.area||'').split(',')[0]}</td>
+      <td>${sBx(l.segment)}</td>
+      <td style="font-size:11px;color:${da>7?'var(--r2)':da>3?'var(--a2)':'var(--g3)'}">${da===0?'Hôm nay':da+'ng trước'}</td>
+      <td onclick="event.stopPropagation()"><button class="ab" onclick="delL(${l.id})" title="Xóa"><i class="ti ti-trash"></i></button></td>
+    </tr>`;}).join('');
+}
+function fL(s,el){fL_=s;document.querySelectorAll('#tc-leads .tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');renderLeads()}
+
+function renderListings(){
+  let data=listings;
+  if(fLS_==='sale')data=data.filter(l=>l.type==='sale');
+  else if(fLS_==='rent')data=data.filter(l=>l.type==='rent');
+  else if(fLS_==='available')data=data.filter(l=>l.status==='available');
+  if(srQ)data=data.filter(l=>[l.title,l.zone,l.notes,l.project||''].join(' ').toLowerCase().includes(srQ));
+  const tb=document.getElementById('tb-ls');
+  if(!data.length){tb.innerHTML=`<tr><td colspan="9"><div class="empty"><i class="ti ti-home-off" aria-hidden="true"></i><p>Không có BĐS</p></div></td></tr>`;return}
+  tb.innerHTML=data.map(l=>`<tr onclick="showLSP(${l.id})" style="cursor:pointer">
+    <td><div style="font-weight:500;font-size:12px">${l.title}</div><div style="font-size:10px;color:var(--g2)">${l.project||''}</div></td>
+    <td>${l.type==='sale'?'<span class="bx bx-buy">Bán</span>':'<span class="bx bx-rent">Thuê</span>'}</td>
+    <td style="font-weight:500;color:var(--g2)">${l.price}</td>
+    <td>${l.area}</td><td>${l.zone}</td>
+    <td>${l.status==='available'?'<span class="bx bx-av">Trống</span>':l.status==='pending'?'<span class="bx bx-pend">Cọc</span>':'<span class="bx bx-sold">Xong</span>'}</td>
+    <td style="color:var(--b1)">${l.images?.length?l.images.length+' ảnh':'—'}</td>
+    <td style="font-size:10px;color:var(--text3)">${l.updated||'—'}</td>
+    <td onclick="event.stopPropagation()"><button class="ab" onclick="delLS(${l.id})" title="Xóa"><i class="ti ti-trash"></i></button></td>
+  </tr>`).join('');
+}
+function fLS(t,el){fLS_=t;document.querySelectorAll('#tc-listings .tab').forEach(x=>x.classList.remove('on'));el.classList.add('on');renderListings()}
+
+function renderMatch(){
+  document.getElementById('ml').innerHTML=leads.map(l=>`
+    <div class="mc ${selL?.id===l.id?'sel':''}" onclick="pickML(${l.id})">
+      <div style="display:flex;justify-content:space-between;align-items:center">${sBx(l.postTxnStatus||l.segment)}<span style="font-size:12px;font-weight:500">${l.name}</span></div>
+      <div class="mc-s">${l.type==='buy'?'Mua':'Thuê'} · ${l.budget}</div>
+    </div>`).join('');
+  renderMR();
+}
+function pickML(id){selL=leads.find(l=>l.id===id);document.getElementById('mai-btn').style.display=selL?'':'none';renderMatch()}
+function scoreM(lead,lst){
+  let s=0;const r=[];
+  const m=(lead.type==='buy'&&lst.type==='sale')||(lead.type==='rent'&&lst.type==='rent');
+  if(!m)return{s:0,r:[]};s+=30;r.push('✓ Đúng loại');
+  const zones=lead.area.toLowerCase().split(/[,\/]/).map(z=>z.trim());
+  if(zones.some(z=>lst.zone.toLowerCase().includes(z)||z.includes(lst.zone.toLowerCase()))){s+=30;r.push('✓ Khu vực')}
+  if(lst.status==='available'){s+=20;r.push('✓ Còn trống')} else if(lst.status==='pending'){s+=5} else return{s:0,r:[]};
+  const projs=(lead.projects||'').toLowerCase();
+  if(projs&&(lst.project||'').toLowerCase().split(' ').some(w=>w.length>3&&projs.includes(w))){s+=20;r.push('★ Dự án QT')}
+  return{s,r};
+}
+function renderMR(){
+  const mr=document.getElementById('mr'),mc=document.getElementById('mc');
+  if(!selL){mr.innerHTML=`<div class="empty"><i class="ti ti-arrows-exchange" aria-hidden="true"></i><p>Chọn khách để tìm BĐS</p></div>`;mc.textContent='';return}
+  const res=listings.map(l=>({l,...scoreM(selL,l)})).filter(r=>r.s>20).sort((a,b)=>b.s-a.s);
+  mc.textContent=`(${res.length})`;
+  mr.innerHTML=res.length?res.map(r=>`<div class="mc" onclick="showLSP(${r.l.id})"><div class="mc-sc">Phù hợp ${r.s}%</div><div class="mc-t">${r.l.title}</div><div class="mc-s">${r.l.price} · ${r.l.zone}</div><div style="font-size:9px;color:var(--g2);margin-top:3px">${r.r.join(' · ')}</div></div>`).join(''):`<div class="empty"><i class="ti ti-mood-confused" aria-hidden="true"></i><p>Chưa tìm thấy BĐS phù hợp</p></div>`;
+}
+async function matchAI(){
+  if(!selL)return;
+  const btn=document.getElementById('mai-btn');btn.innerHTML='<span class="spin"></span>';
+  const avail=listings.filter(l=>l.status!=='sold').map(l=>`${l.title}|${l.type}|${l.price}|${l.zone}|${l.notes}`).join('\n');
+  try{const txt=await callAI([{role:'user',content:`CRM ERA AntPlus. Khách: ${selL.name}|${selL.type}|${selL.budget}|${selL.area}|DX:${selL.projects||''}|${selL.notes}\nGiỏ:\n${avail}\nGợi ý top 2-3 phù hợp + cách tiếp cận. Tiếng Việt, ngắn.`}]);alert(txt);}catch(e){alert('Lỗi AI')}
+  btn.innerHTML='<i class="ti ti-robot" aria-hidden="true"></i>Gợi ý AI';
+}
+
+function renderRemind(){
+  const el=document.getElementById('rl');
+  const sorted=[...leads].sort((a,b)=>dAgo(b.lastContact)-dAgo(a.lastContact));
+  el.innerHTML=sorted.map(l=>{
+    const da=dAgo(l.lastContact),cls=da>7?'urg':'wrn';
+    return`<div class="rc ${cls}" onclick="showLP(${l.id})"><div class="rc-h"><span class="rc-n">${l.name} ${sBx(l.postTxnStatus||l.segment)}</span><span class="rc-d" style="color:${da>7?'var(--r1)':'var(--a1)'}">${da===0?'Hôm nay':da+'ng'}</span></div><div style="font-size:10px;color:var(--text2);margin-bottom:3px">${l.type==='buy'?'Mua':'Thuê'} · ${l.budget} · ${(l.area||'').split(',')[0]}</div><div style="font-size:10px;color:${da>7?'var(--r1)':'var(--a1)'}">${da>7?'Gọi ngay — có thể khách tìm MG khác!':'Gửi tin cập nhật BĐS mới hoặc hỏi thăm'}</div></div>`;
+  }).join('');
+}
+
+/* ── RHYTHM ── */
+function getInP(n){const c=dateKey(n);return actLog.filter(a=>a.date>=c)}
+function getPrevP(n){const f=dateKey(n*2),t=dateKey(n);return actLog.filter(a=>a.date>=f&&a.date<t)}
+function calcStreak(){const days=new Set(actLog.map(a=>a.date));let s=0,d=new Date();while(true){const k=d.toISOString().split('T')[0];if(days.has(k)){s++;d.setDate(d.getDate()-1)}else break;if(s>365)break}return s}
+function calcMaxStreak(){const days=[...new Set(actLog.map(a=>a.date))].sort();let mx=0,cur=0,prev=null;days.forEach(d=>{if(prev){const diff=(new Date(d)-new Date(prev))/86400000;cur=diff===1?cur+1:1}else cur=1;if(cur>mx)mx=cur;prev=d});return mx}
+function setPeriod(d,el){period=d;document.querySelectorAll('.period-tab').forEach(b=>b.classList.remove('on'));el.classList.add('on');renderRhythm()}
+
+function renderRhythm(){
+  renderRKPIs();renderHeatmap();renderStreaks();renderChartMain();renderChartLst();renderCare();renderZone();renderGoals();renderAlerts();
+}
+function renderRKPIs(){
+  const c=getInP(period),p=getPrevP(period);
+  const kL=c.filter(a=>a.type==='lead').length,kLS=c.filter(a=>a.type==='listing').length,kC=c.filter(a=>a.type==='care').length;
+  const pL=p.filter(a=>a.type==='lead').length,pLS=p.filter(a=>a.type==='listing').length;
+  document.getElementById('r-leads').textContent=kL;document.getElementById('r-lst').textContent=kLS;document.getElementById('r-care').textContent=kC;document.getElementById('r-streak').textContent=calcStreak();
+  const setD=(id,v,pv)=>{const el=document.getElementById(id);if(pv===0){el.className='m-delta neu';el.textContent='Kỳ trước: 0'}else{const pct=Math.round((v-pv)/pv*100);el.className='m-delta '+(pct>=0?'up':'dn');el.textContent=(pct>=0?'▲':'▼')+Math.abs(pct)+'% so kỳ trước'}};
+  setD('r-leads-d',kL,pL);setD('r-lst-d',kLS,pLS);
+}
+function renderHeatmap(){
+  const hm=document.getElementById('heatmap');hm.innerHTML='';
+  const counts={};actLog.forEach(a=>counts[a.date]=(counts[a.date]||0)+1);
+  const mx=Math.max(...Object.values(counts),1);
+  const cols=['#F1EFE8','#9FE1CB','#5DCAA5','#1D9E75','#085041'];
+  const gc=c=>{if(!c)return cols[0];return cols[Math.min(4,Math.ceil(c/mx*4))]};
+  for(let w=11;w>=0;w--){for(let d=0;d<7;d++){const dt=new Date();dt.setDate(dt.getDate()-(w*7+(new Date().getDay()-d+7)%7));const k=dt.toISOString().split('T')[0],c=counts[k]||0;const cell=document.createElement('div');cell.className='hm-cell';cell.style.background=gc(c);cell.title=`${k}: ${c} HĐ`;hm.appendChild(cell);}}
+}
+function renderStreaks(){
+  const s=calcStreak(),ms=calcMaxStreak(),lc=actLog.filter(a=>a.type==='lead').length,lsc=actLog.filter(a=>a.type==='listing').length,cc=actLog.filter(a=>a.type==='care').length;
+  const items=[
+    {i:'ti-flame',bg:'#FAEEDA',c:'#854F0B',n:'Streak liên tiếp',s:'ngày hoạt động kế tiếp',v:s+'ng',p:Math.min(s/30,1),pc:'#EF9F27'},
+    {i:'ti-trophy',bg:'#E1F5EE',c:'#085041',n:'Kỷ lục cá nhân',s:'streak cao nhất đạt được',v:ms+'ng',p:Math.min(ms/60,1),pc:'#1D9E75'},
+    {i:'ti-users',bg:'#E6F1FB',c:'#185FA5',n:'Tổng khách thu thập',s:'từ trước đến nay',v:lc,p:Math.min(lc/50,1),pc:'#378ADD'},
+    {i:'ti-home',bg:'#EEEDFE',c:'#534AB7',n:'Tổng BĐS ký gửi',s:'từ trước đến nay',v:lsc,p:Math.min(lsc/30,1),pc:'#7F77DD'},
+    {i:'ti-heart',bg:'#FBEAF0',c:'#993556',n:'Tổng lần chăm sóc',s:'ghi nhận trong CRM',v:cc,p:Math.min(cc/100,1),pc:'#D4537E'},
+  ];
+  document.getElementById('streak-list').innerHTML=items.map(it=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--border)">
+      <div style="width:28px;height:28px;border-radius:6px;background:${it.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ${it.i}" style="font-size:14px;color:${it.c}" aria-hidden="true"></i></div>
+      <div style="flex:1;min-width:0"><div style="font-size:11px;font-weight:500">${it.n}</div><div style="font-size:9px;color:var(--text3)">${it.s}</div><div class="prog-bar"><div class="prog-fill" style="width:${Math.round(it.p*100)}%;background:${it.pc}"></div></div></div>
+      <div style="font-size:13px;font-weight:500;color:${it.c};flex-shrink:0">${it.v}</div>
+    </div>`).join('');
+}
+function renderChartMain(){
+  const N=Math.min(period,30),labels=[],dL=[],dLS=[];
+  for(let i=N-1;i>=0;i--){const k=dateKey(i);labels.push(i===0?'Hôm nay':i===1?'Hôm qua':fmtD(k));dL.push(actLog.filter(a=>a.date===k&&a.type==='lead').length);dLS.push(actLog.filter(a=>a.date===k&&a.type==='listing').length)}
+  if(chartMain)chartMain.destroy();
+  chartMain=new Chart(document.getElementById('chart-main'),{type:'bar',data:{labels,datasets:[{label:'Khách',data:dL,backgroundColor:'#378ADD',borderRadius:3,borderSkipped:false},{label:'BĐS',data:dLS,backgroundColor:'#1D9E75',borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9},maxRotation:0,autoSkip:true,maxTicksLimit:12},grid:{display:false}},y:{ticks:{font:{size:9},stepSize:1},grid:{color:'rgba(128,128,128,0.06)'},beginAtZero:true}},interaction:{mode:'index',intersect:false}}});
+}
+function renderChartLst(){
+  const av=listings.filter(l=>l.status==='available').length,pe=listings.filter(l=>l.status==='pending').length,so=listings.filter(l=>l.status==='sold').length;
+  if(chartLst)chartLst.destroy();
+  chartLst=new Chart(document.getElementById('chart-lst'),{type:'doughnut',data:{labels:['Trống','Cọc','Đã bán'],datasets:[{data:[av,pe,so],backgroundColor:['#1D9E75','#EF9F27','#888780'],borderWidth:0,hoverOffset:3}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:false}}}});
+  document.getElementById('lst-legend').innerHTML=[[av,'#1D9E75','Còn trống'],[pe,'#EF9F27','Đang cọc'],[so,'#888780','Đã bán/thuê']].map(([v,c,l])=>`<span style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text2)"><span style="width:9px;height:9px;border-radius:2px;background:${c};display:inline-block"></span>${l} <strong>${v}</strong></span>`).join('');
+}
+function renderCare(){
+  const hot=leads.filter(l=>l.segment==='hot').length,warm=leads.filter(l=>l.segment==='warm').length,cold=leads.filter(l=>l.segment==='cold').length,vip=leads.filter(l=>l.segment==='vip').length,ov=leads.filter(l=>dAgo(l.lastContact)>7).length,ok=leads.length-ov,mx=leads.length||1;
+  document.getElementById('care-breakdown').innerHTML=[[' HOT',hot,'#E24B4A'],['Warm',warm,'#EF9F27'],['VIP',vip,'#7F77DD'],['Cold',cold,'#85B7EB'],['Chăm đúng hạn',ok,'#1D9E75'],['Quá hạn',ov,'#E24B4A']].map(([l,v,c])=>`<div class="rank-row"><div class="rank-name" style="font-size:10px">${l}</div><div class="rank-bar-wrap"><div class="rank-bar"><div class="rank-fill" style="width:${Math.round(v/mx*100)}%;background:${c}"></div></div></div><div class="rank-val" style="color:${c};font-weight:500">${v}</div></div>`).join('');
+}
+function renderZone(){
+  const zones={};leads.forEach(l=>(l.area||'').split(',').forEach(z=>{const k=z.trim();if(k)zones[k]=(zones[k]||0)+1}));
+  const sorted=Object.entries(zones).sort((a,b)=>b[1]-a[1]).slice(0,6),mx=sorted[0]?.[1]||1;
+  const cols=['#085041','#1D9E75','#5DCAA5','#9FE1CB','#B4B2A9','#D3D1C7'];
+  document.getElementById('zone-rank').innerHTML=sorted.map(([z,c],i)=>`<div class="rank-row"><div style="font-size:10px;font-weight:500;color:var(--text3);width:14px;text-align:center;flex-shrink:0">${i+1}</div><div class="rank-name" style="font-size:10px">${z}</div><div class="rank-bar-wrap"><div class="rank-bar"><div class="rank-fill" style="width:${Math.round(c/mx*100)}%;background:${cols[i]}"></div></div></div><div class="rank-val">${c}</div></div>`).join('')||'<div style="font-size:11px;color:var(--text3)">Chưa có dữ liệu</div>';
+}
+function renderGoals(){
+  let g;try{g=JSON.parse(localStorage.getItem(KGOAL))}catch(e){g=null}
+  if(!g)g={leads:{target:10,label:'Khách mới/tháng'},listings:{target:5,label:'BĐS ký gửi/tháng'},care:{target:30,label:'Lần chăm sóc/tháng'}};
+  const c30=getInP(30),vals={leads:c30.filter(a=>a.type==='lead').length,listings:c30.filter(a=>a.type==='listing').length,care:c30.filter(a=>a.type==='care').length};
+  const colors={leads:'#378ADD',listings:'#1D9E75',care:'#EF9F27'},icons={leads:'ti-users',listings:'ti-home',care:'ti-heart'};
+  let html='';
+  Object.entries(g).forEach(([k,gv])=>{const v=vals[k],t=gv.target,pct=Math.min(Math.round(v/t*100),100),done=v>=t;html+=`<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px"><div style="font-size:10px;display:flex;align-items:center;gap:4px"><i class="ti ${icons[k]}" style="font-size:11px;color:${colors[k]}" aria-hidden="true"></i>${gv.label}</div><div style="font-size:10px;font-weight:500;color:${done?'#3B6D11':colors[k]}">${v}/${t}${done?' ✓':''}</div></div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${done?'#1D9E75':colors[k]}"></div></div><div style="font-size:9px;color:var(--text3);margin-top:2px">${pct}% — ${done?'Hoàn thành!':'còn '+(t-v)+' để đạt'}</div></div>`;});
+  html+=`<button class="btn btn-sm" onclick="editGoals()" style="margin-top:3px"><i class="ti ti-edit" aria-hidden="true"></i>Sửa mục tiêu</button>`;
+  document.getElementById('goals-sec').innerHTML=html;
+}
+function editGoals(){
+  let g;try{g=JSON.parse(localStorage.getItem(KGOAL))}catch(e){g={leads:{target:10,label:'Khách mới/tháng'},listings:{target:5,label:'BĐS ký gửi/tháng'},care:{target:30,label:'Lần chăm sóc/tháng'}}};
+  const nl=prompt('Mục tiêu khách mới/tháng:',g.leads.target);if(nl===null)return;
+  const nls=prompt('Mục tiêu BĐS ký gửi/tháng:',g.listings.target);if(nls===null)return;
+  const nc=prompt('Mục tiêu lần chăm sóc/tháng:',g.care.target);if(nc===null)return;
+  g.leads.target=parseInt(nl)||10;g.listings.target=parseInt(nls)||5;g.care.target=parseInt(nc)||30;
+  localStorage.setItem(KGOAL,JSON.stringify(g));renderGoals();
+}
+function renderAlerts(){
+  const alerts=[];
+  const ov=leads.filter(l=>dAgo(l.lastContact)>7);if(ov.length)alerts.push({t:'danger',msg:`${ov.length} khách chưa chăm >7 ngày`,i:'ti-alert-circle'});
+  const av=listings.filter(l=>l.status==='available');if(av.length>=3)alerts.push({t:'success',msg:`${av.length} BĐS trống — cơ hội ghép khách`,i:'ti-home-check'});
+  const s=calcStreak();if(s>=7)alerts.push({t:'success',msg:`Streak ${s} ngày — xuất sắc!`,i:'ti-flame'});else if(s===0)alerts.push({t:'warning',msg:'Chưa ghi HĐ hôm nay — giữ streak!',i:'ti-clock'});
+  const bd=leads.filter(l=>{if(!l.birthday)return false;const b=new Date(l.birthday),n=new Date();b.setFullYear(n.getFullYear());const d=Math.ceil((b-n)/86400000);return d>=0&&d<=7});if(bd.length)alerts.push({t:'info',msg:`${bd.length} khách sinh nhật trong 7 ngày`,i:'ti-cake'});
+  const hot=leads.filter(l=>l.segment==='hot'&&dAgo(l.lastContact)>3);if(hot.length)alerts.push({t:'warning',msg:`${hot.length} khách HOT chưa liên hệ >3 ngày`,i:'ti-urgent'});
+  const cols={danger:'#E24B4A',success:'#1D9E75',warning:'#EF9F27',info:'#378ADD'};
+  const mkH=list=>list.map(a=>`<div class="alert-item"><div class="alert-dot" style="background:${cols[a.t]}"></div><i class="ti ${a.i}" style="font-size:13px;color:${cols[a.t]};flex-shrink:0" aria-hidden="true"></i><span>${a.msg}</span></div>`).join('');
+  const h=Math.ceil(alerts.length/2);
+  document.getElementById('al1').innerHTML=mkH(alerts.slice(0,h));
+  document.getElementById('al2').innerHTML=mkH(alerts.slice(h));
+}
+function logActivity(){
+  const t=prompt('Ghi hoạt động:\n1 = Thêm khách mới\n2 = Thêm BĐS ký gửi\n3 = Chăm sóc khách\n\nNhập số:');
+  if(!t)return;
+  const map={'1':'lead','2':'listing','3':'care'};const type=map[t.trim()];
+  if(!type)return alert('Nhập 1, 2 hoặc 3');
+  actLog.push({type,date:td(),note:{lead:'Thêm khách',listing:'Thêm BĐS',care:'Chăm sóc'}[type]});
+  saveAL();renderRhythm();alert('Đã ghi! Streak: '+calcStreak()+' ngày');
+}
+
+/* ── PANELS ── */
+function showLP(id){const l=leads.find(x=>x.id===id);if(!l)return;curLP=l;curLSP=null;spTab=0;openPanel();document.getElementById('sp-t').textContent=l.name;document.getElementById('sp-qbtn').style.display='none';renderLTabs(l)}
+function showLSP(id){const l=listings.find(x=>x.id===id);if(!l)return;curLSP=l;curLP=null;spTab=0;openPanel();document.getElementById('sp-t').textContent=l.title;document.getElementById('sp-qbtn').style.display='flex';renderLSTabs(l)}
+function openPanel(){document.getElementById('sp').classList.add('open')}
+function closePanel(){document.getElementById('sp').classList.remove('open');curLP=null;curLSP=null}
+function setSPTab(i){spTab=i;if(curLP)renderLTabs(curLP);else if(curLSP)renderLSTabs(curLSP)}
+
+function renderLTabs(l){
+  const tabs=['Hồ sơ','Nhu cầu','Giao dịch','Chăm sóc'];
+  document.getElementById('sp-tabs').innerHTML=tabs.map((t,i)=>`<div class="sp-tab ${i===spTab?'on':''}" onclick="setSPTab(${i})">${t}</div>`).join('');
+  const bd=document.getElementById('sp-body');
+  if(spTab===0){
+    const da=dAgo(l.lastContact);
+    const bdNote=l.birthday?()=>{const b=new Date(l.birthday),n=new Date();b.setFullYear(n.getFullYear());const d=Math.ceil((b-n)/86400000);return d>=0&&d<=30?`<div class="bd-warn"><i class="ti ti-gift" style="font-size:11px" aria-hidden="true"></i> Sinh nhật trong ${d} ngày — gửi lời chúc!</div>`:''}():'';
+    bd.innerHTML=`<div class="sp-sec"><div style="display:flex;align-items:center;gap:9px;margin-bottom:10px"><div style="width:36px;height:36px;border-radius:50%;background:var(--g5);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:var(--g1);flex-shrink:0">${ini(l.name)}</div><div><div style="font-weight:500;font-size:13px">${l.name}</div><div style="font-size:10px;color:var(--text3)">${l.job||''}${l.company?' · '+l.company:''}</div></div></div>${bdNote}${da>7?`<div class="warn-box"><div class="warn-t">Cần chăm gấp</div><div class="warn-tx">${da} ngày chưa liên hệ</div></div>`:''}</div><div class="sp-sec"><div class="sp-lbl">Liên hệ & Cá nhân</div>${l.phone?`<div class="sp-f"><i class="ti ti-phone" style="font-size:11px;margin-right:3px" aria-hidden="true"></i>${l.phone}</div>`:''} ${l.email?`<div class="sp-f"><i class="ti ti-mail" style="font-size:11px;margin-right:3px" aria-hidden="true"></i>${l.email}</div>`:''} ${l.birthday?`<div class="sp-f"><i class="ti ti-cake" style="font-size:11px;margin-right:3px" aria-hidden="true"></i>${new Date(l.birthday).toLocaleDateString('vi-VN')}</div>`:''} ${l.family?`<div class="sp-f"><i class="ti ti-users" style="font-size:11px;margin-right:3px" aria-hidden="true"></i>${l.family}</div>`:''}</div><div class="sp-sec"><div class="sp-lbl">Phân loại & Mục đích</div><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px">${sBx(l.segment)}${l.postTxnStatus?sBx(l.postTxnStatus):''}</div><div class="sp-m">${l.purpose||'Chưa rõ'}</div></div><div class="sp-sec"><div class="sp-lbl">Cập nhật sau giao dịch</div><div class="status-row">${['returning','vip','prospect'].map(s=>`<button class="seg-btn ${l.postTxnStatus===s?'on':''}" onclick="updPTS('${s}')">${segMap[s].l}</button>`).join('')}<button class="seg-btn ${!l.postTxnStatus?'on':''}" onclick="updPTS('')">Bỏ</button></div></div>`;
+  }else if(spTab===1){
+    bd.innerHTML=`<div class="sp-sec"><div class="sp-lbl">Nhu cầu chính</div><div class="sp-f">${l.type==='buy'?'🏠 Mua BĐS':'🔑 Thuê BĐS'} · <strong>${l.budget}</strong></div><div class="sp-m">${l.area}</div></div><div class="sp-sec"><div class="sp-lbl">Dự án quan tâm</div>${l.projects?`<div style="display:flex;flex-wrap:wrap;gap:4px">${l.projects.split(',').map(p=>`<span class="tag">${p.trim()}</span>`).join('')}</div>`:'<div class="sp-m">Chưa xác định</div>'}</div><div class="sp-sec"><div class="sp-lbl">Ghi chú nhu cầu</div><div class="sp-m">${l.notes}</div></div><div class="sp-sec"><div class="sp-lbl">Gợi ý AI <span class="spin" id="ai-sp"></span></div><div class="ai-box"><div class="ai-lbl"><i class="ti ti-robot" style="font-size:10px" aria-hidden="true"></i>Phân tích</div><div class="ai-txt" id="ai-tx">Đang phân tích...</div></div></div>`;
+    analyzeAI(l);
+  }else if(spTab===2){
+    bd.innerHTML=`<div class="sp-sec"><div class="sp-lbl">Lịch sử giao dịch</div>${l.txnHistory?.length?l.txnHistory.map(t=>`<div style="background:var(--g5);border-radius:var(--rad);padding:7px 9px;margin-bottom:6px;border:0.5px solid var(--g4)"><div style="font-size:10px;font-weight:500;color:var(--g1)">${t.date}</div><div style="font-size:11px;margin-top:2px">${t.note}</div></div>`).join(''):'<div class="sp-m">Chưa có giao dịch</div>'}</div><div class="sp-sec"><div class="sp-lbl">Thêm giao dịch</div><textarea id="txn-n" placeholder="VD: Ký thuê Masteri 22tr/tháng, HH 22tr"></textarea><button class="btn btn-p btn-sm" onclick="addTxn(${l.id})" style="margin-top:5px"><i class="ti ti-plus"></i>Lưu</button></div><div class="sp-sec"><div class="sp-lbl">Phân loại sau GD</div><div class="status-row">${['returning','vip','prospect'].map(s=>`<button class="seg-btn ${l.postTxnStatus===s?'on':''}" onclick="updPTS('${s}')">${segMap[s].l}</button>`).join('')}</div></div>`;
+  }else{
+    bd.innerHTML=`<div class="sp-sec"><div class="sp-lbl">Lịch sử tương tác</div>${(l.history||[]).slice(-5).reverse().map(h=>`<div class="tl-i"><div class="tl-d"></div><div><div class="tl-ti">${h.date}</div><div class="tl-tx">${h.note}</div></div></div>`).join('')}<div style="display:flex;gap:5px;margin-top:7px"><input type="text" id="nn-${l.id}" placeholder="Ghi chú mới..." style="flex:1;font-size:11px"><button class="btn btn-p btn-sm" onclick="addNote(${l.id})"><i class="ti ti-plus"></i></button></div><button class="btn btn-sm" onclick="markC(${l.id})" style="width:100%;margin-top:5px"><i class="ti ti-check" aria-hidden="true"></i>Đã liên hệ hôm nay</button></div><div class="sp-sec"><div class="sp-lbl">Cập nhật trạng thái</div><div class="status-row">${['hot','warm','cold','vip'].map(s=>`<button class="seg-btn ${l.segment===s?'on':''}" onclick="updSeg('${s}')">${segMap[s].l}</button>`).join('')}</div></div>`;
+  }
+}
+async function analyzeAI(l){
+  const el=document.getElementById('ai-tx'),sp=document.getElementById('ai-sp');if(!el)return;
+  const da=dAgo(l.lastContact);
+  try{const txt=await callAI([{role:'user',content:`CRM ERA AntPlus. Gợi ý chăm sóc:\n${l.name}|${l.segment}|${l.postTxnStatus||''}|${l.type}|${l.budget}|${l.area}|Dự án:${l.projects||''}|${l.purpose||''}|${da}ng chưa LH|TX:${l.txnHistory?.map(t=>t.note).join('; ')||'Chưa'}\nTiếng Việt, 3 câu cụ thể.`}]);if(el)el.textContent=txt;}catch(e){if(el)el.textContent='Không kết nối AI.'}
+  if(sp)sp.style.display='none';
+}
+function updPTS(s){if(!curLP)return;curLP.postTxnStatus=s;saveD();renderLTabs(curLP);renderMain()}
+function updSeg(s){if(!curLP)return;curLP.segment=s;saveD();renderLTabs(curLP);renderMain()}
+function addNote(id){const l=leads.find(x=>x.id===id);if(!l)return;const inp=document.getElementById('nn-'+id);if(!inp?.value.trim())return;if(!l.history)l.history=[];l.history.push({date:tdf(),note:inp.value.trim()});l.lastContact=td();saveD();renderLTabs(l);renderMain()}
+function markC(id){const l=leads.find(x=>x.id===id);if(!l)return;if(!l.history)l.history=[];l.history.push({date:tdf(),note:'Đã liên hệ'});l.lastContact=td();saveD();renderLTabs(l);renderMain()}
+function addTxn(id){const l=leads.find(x=>x.id===id);if(!l)return;const inp=document.getElementById('txn-n');if(!inp?.value.trim())return;if(!l.txnHistory)l.txnHistory=[];const n=new Date();l.txnHistory.push({date:`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`,note:inp.value.trim()});if(!l.postTxnStatus)l.postTxnStatus='returning';saveD();setSPTab(2)}
+
+function renderLSTabs(l){
+  const tabs=['Chi tiết','Hình ảnh','Lịch sử'];
+  document.getElementById('sp-tabs').innerHTML=tabs.map((t,i)=>`<div class="sp-tab ${i===spTab?'on':''}" onclick="setSPTab(${i})">${t}</div>`).join('');
+  const bd=document.getElementById('sp-body');
+  if(spTab===0){
+    bd.innerHTML=`<div class="sp-sec"><div class="sp-lbl">Thông tin BĐS</div><div class="sp-f"><b>Dự án:</b> <span style="color:var(--g2)">${l.project||'Độc lập'}</span></div><div class="sp-f"><b>Loại:</b> ${l.type==='sale'?'Bán':'Cho thuê'}</div><div class="sp-f"><b>Giá:</b> <span style="color:var(--g2);font-weight:500">${l.price}</span></div><div class="sp-f"><b>Diện tích:</b> ${l.area} · <b>Khu vực:</b> ${l.zone}</div><div class="sp-m" style="margin-top:5px">${l.notes}</div></div><div class="sp-sec"><div class="sp-lbl">Chủ nhà</div><div class="sp-f">${l.owner} · ${l.phone}</div></div><div class="sp-sec"><div class="sp-lbl">Cập nhật tình trạng</div><div class="status-row"><button class="seg-btn ${l.status==='available'?'on':''}" onclick="updLSS('available')">Còn trống</button><button class="seg-btn ${l.status==='pending'?'on':''}" onclick="updLSS('pending')">Đang cọc</button><button class="seg-btn ${l.status==='sold'?'on':''}" onclick="updLSS('sold')">Đã bán/thuê</button></div></div><div class="sp-sec"><div class="sp-lbl">Ghi chú cập nhật</div><div style="display:flex;gap:4px;margin-top:3px"><input type="text" id="lsn-${l.id}" placeholder="Thêm ghi chú..." style="flex:1;font-size:11px"><button class="btn btn-p btn-sm" onclick="addLSNote(${l.id})"><i class="ti ti-plus"></i></button></div></div>`;
+  }else if(spTab===1){
+    bd.innerHTML=`<div class="sp-sec"><div class="sp-lbl">Ảnh BĐS (${(l.images||[]).length})</div><div class="img-grid" id="ig">${(l.images||[]).map(u=>`<div class="img-item"><img src="${u}" alt="ảnh BĐS" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\\'sp-m\\' style=\\'text-align:center;padding:10px\\'><i class=\\'ti ti-photo-off\\'></i></div>'"></div>`).join('')}${!(l.images?.length)?`<div class="img-item"><div style="text-align:center;font-size:10px;color:var(--text3);padding:10px"><i class="ti ti-photo" style="font-size:18px;display:block;opacity:.3" aria-hidden="true"></i>Chưa có ảnh</div></div>`:''}</div><div style="display:flex;gap:5px;margin-top:8px"><input type="text" id="img-u" placeholder="Link ảnh (https://...)" style="flex:1;font-size:11px"><button class="btn btn-p btn-sm" onclick="addImg(${l.id})"><i class="ti ti-plus"></i>Thêm</button></div><div style="font-size:9px;color:var(--text3);margin-top:3px">Hỗ trợ link từ Google Drive, Imgur, Unsplash...</div></div>`;
+  }else{
+    bd.innerHTML=`<div class="sp-sec"><div class="sp-lbl">Lịch sử cập nhật</div>${(l.history||[]).slice(-6).reverse().map(h=>`<div class="tl-i"><div class="tl-d"></div><div><div class="tl-ti">${h.date}</div><div class="tl-tx">${h.note}</div></div></div>`).join('')}</div>`;
+  }
+}
+function updLSS(s){if(!curLSP)return;curLSP.status=s;curLSP.updated=td();if(!curLSP.history)curLSP.history=[];curLSP.history.push({date:tdf(),note:'Cập nhật: '+{available:'Còn trống',pending:'Đang cọc',sold:'Đã bán/thuê'}[s]});saveD();renderLSTabs(curLSP);renderMain()}
+function addLSNote(id){const l=listings.find(x=>x.id===id);if(!l)return;const inp=document.getElementById('lsn-'+id);if(!inp?.value.trim())return;if(!l.history)l.history=[];l.history.push({date:tdf(),note:inp.value.trim()});l.updated=td();saveD();renderLSTabs(l)}
+function addImg(id){const l=listings.find(x=>x.id===id);if(!l)return;const u=document.getElementById('img-u')?.value.trim();if(!u||!u.startsWith('http'))return alert('Nhập link ảnh hợp lệ (bắt đầu https://)');if(!l.images)l.images=[];l.images.push(u);saveD();renderLSTabs(l)}
+function quickQuote(){if(curLSP){go('quote');setTimeout(()=>{document.getElementById('q-lst').value=curLSP.id},100)}}
+
+/* ── AI PARSE ── */
+let pT='';
+async function runParse(type){
+  const inp=document.getElementById('pi').value.trim();if(!inp)return;parsedT=pT=type;
+  document.getElementById('ps').style.display='inline-flex';document.getElementById('pra').style.display='none';
+  const sys=type==='listing'?'Bóc tách JSON BĐS: title,project,ownerName,phone,type(sale/rent),price,priceNum(triệu),area,zone,status(available),notes. Chỉ JSON thuần.':'Bóc tách JSON khách: name,phone,email,type(buy/rent),budget,area,projects,purpose,segment(hot/warm/cold),notes. Chỉ JSON thuần.';
+  try{
+    const txt=await callAI([{role:'user',content:inp}],sys);
+    parsedD=JSON.parse(txt.replace(/```json|```/g,'').trim());
+    showPR(parsedD,type);checkDup(parsedD,type);
+  }catch(e){parsedD=null;alert('Lỗi bóc tách. Thử lại!')}
+  document.getElementById('ps').style.display='none';
+}
+function showPR(d,type){
+  document.getElementById('pra').style.display='block';
+  const pairs=type==='listing'?[['Tên BĐS',d.title],['Dự án',d.project],['Chủ nhà',d.ownerName],['SĐT',d.phone],['Loại',d.type==='rent'?'Cho thuê':'Bán'],['Giá',d.price],['Diện tích',d.area],['Khu vực',d.zone],['Ghi chú',d.notes]]:[['Tên',d.name],['SĐT',d.phone],['Nhu cầu',d.type==='rent'?'Thuê':'Mua'],['Ngân sách',d.budget],['Khu vực',d.area],['Dự án QT',d.projects],['Mục đích',d.purpose],['Ghi chú',d.notes]];
+  document.getElementById('pf').innerHTML=pairs.filter(([,v])=>v).map(([k,v])=>`<div class="pr-i"><div class="pr-k">${k}</div><div class="pr-v">${v}</div></div>`).join('');
+}
+function checkDup(d,type){
+  const dw=document.getElementById('pdw');
+  if(type==='lead'){const dups=leads.filter(l=>(d.phone&&l.phone.replace(/\s/g,'')===(d.phone||'').replace(/\s/g,''))||(d.name&&l.name.toLowerCase().includes((d.name||'').toLowerCase())));dw.style.display=dups.length?'block':'none';if(dups.length)dw.innerHTML=`⚠️ Có thể trùng: <strong>${dups.map(x=>x.name).join(', ')}</strong>`}
+  else{const dups=listings.filter(l=>(d.ownerName&&l.owner?.toLowerCase().includes((d.ownerName||'').toLowerCase()))||(d.title&&l.title.toLowerCase().includes((d.title||'').substring(0,10).toLowerCase())));dw.style.display=dups.length?'block':'none';if(dups.length)dw.innerHTML=`⚠️ BĐS có thể trùng: <strong>${dups.map(x=>x.title).join(', ')}</strong>`}
+}
+function saveParsed(){
+  if(!parsedD)return;
+  if(parsedT==='listing'){listings.push({id:Date.now(),title:parsedD.title||'BĐS mới',project:parsedD.project||'',type:parsedD.type||'sale',price:parsedD.price||'',priceNum:parsedD.priceNum||0,area:parsedD.area||'',zone:parsedD.zone||'',status:'available',owner:parsedD.ownerName||'',phone:parsedD.phone||'',notes:parsedD.notes||'',images:[],updated:td(),history:[{date:tdf(),note:'Nhập qua AI Parser'}]})}
+  else{leads.push({id:Date.now(),name:parsedD.name||'Khách mới',phone:parsedD.phone||'',email:parsedD.email||'',segment:parsedD.segment||'warm',type:parsedD.type||'buy',budget:parsedD.budget||'',area:parsedD.area||'',projects:parsedD.projects||'',purpose:parsedD.purpose||'',notes:parsedD.notes||'',birthday:'',job:'',company:'',family:'',postTxnStatus:'',txnHistory:[],lastContact:td(),history:[{date:tdf(),note:'Nhập qua AI Parser'}]})}
+  saveD();clearParse();renderMain();alert('Đã lưu thành công!');
+}
+function clearParse(){parsedD=null;document.getElementById('pi').value='';document.getElementById('pra').style.display='none';document.getElementById('pdw').style.display='none'}
+
+/* ── QUERY ── */
+async function runQuery(){
+  const q=document.getElementById('qi').value.trim();if(!q)return;
+  document.getElementById('qs').style.display='inline-flex';
+  const all={leads:leads.map(l=>({id:l.id,type:'lead',name:l.name,phone:l.phone,needType:l.type,budget:l.budget,area:l.area,segment:l.segment,projects:l.projects||'',notes:l.notes})),listings:listings.map(l=>({id:l.id,type:'listing',title:l.title,project:l.project||'',listType:l.type,price:l.price,zone:l.zone,status:l.status,notes:l.notes}))};
+  try{
+    const txt=await callAI([{role:'user',content:`Tìm CRM BĐS ERA AntPlus. Dữ liệu:\n${JSON.stringify(all)}\nTruy vấn: "${q}"\nJSON: {results:[{type:"lead"|"listing",id:number,reason:"lý do"}],summary:"mô tả"}. Chỉ JSON.`}]);
+    const res=JSON.parse(txt.replace(/```json|```/g,'').trim());showQR(res,q);
+  }catch(e){document.getElementById('qr').innerHTML=`<div class="empty"><i class="ti ti-alert-circle" aria-hidden="true"></i><p>Lỗi AI</p></div>`}
+  document.getElementById('qs').style.display='none';
+}
+function showQR(res,q){
+  const el=document.getElementById('qr');
+  if(!res.results?.length){el.innerHTML=`<div class="empty"><i class="ti ti-search-off" aria-hidden="true"></i><p>Không có kết quả</p></div>`;return}
+  el.innerHTML=`<div style="font-size:11px;color:var(--g2);margin-bottom:8px;padding:8px 10px;background:var(--g5);border-radius:var(--rad)">${res.summary||''}</div>`+
+  res.results.map(r=>{
+    if(r.type==='lead'){const l=leads.find(x=>x.id===r.id);if(!l)return'';return`<div class="mc" onclick="showLP(${l.id})"><div style="display:flex;justify-content:space-between"><div class="mc-t">${l.name}</div>${sBx(l.segment)}</div><div class="mc-s">${l.type==='buy'?'Mua':'Thuê'} · ${l.budget}</div><div style="font-size:9px;color:var(--g2);margin-top:3px">${r.reason}</div></div>`}
+    else{const l=listings.find(x=>x.id===r.id);if(!l)return'';return`<div class="mc" onclick="showLSP(${l.id})"><div style="display:flex;justify-content:space-between"><div class="mc-t">${l.title}</div><span class="bx bx-av">Trống</span></div><div class="mc-s">${l.price} · ${l.zone}</div><div style="font-size:9px;color:var(--g2);margin-top:3px">${r.reason}</div></div>`}
+  }).join('');
+}
+
+/* ── QUOTE ── */
+function popQSelects(){
+  const ls=document.getElementById('q-lst');const ll=document.getElementById('q-lead');
+  ls.innerHTML='<option value="">-- Chọn BĐS --</option>'+listings.map(l=>`<option value="${l.id}">${l.title} · ${l.price}</option>`).join('');
+  ll.innerHTML='<option value="">-- Báo giá chung --</option>'+leads.map(l=>`<option value="${l.id}">${l.name} · ${l.phone}</option>`).join('');
+}
+function updateQP(){}
+async function genQuote(){
+  const lsId=document.getElementById('q-lst').value;if(!lsId)return alert('Vui lòng chọn BĐS');
+  const lst=listings.find(l=>l.id==lsId);const llId=document.getElementById('q-lead').value;const lead=llId?leads.find(l=>l.id==llId):null;
+  const qtype=document.getElementById('q-type').value;const tone=document.getElementById('q-tone').value;
+  document.getElementById('qgs').style.display='inline-flex';document.getElementById('qprev').textContent='Đang tạo báo giá...';
+  const td2={zalo:'tin nhắn Zalo ngắn gọn <200 chữ, có emoji phù hợp',formal:'email báo giá trang trọng, ký tên ERA AntPlus',story:'storytelling cảm xúc 150-250 chữ',compare:'phân tích so sánh thị trường, vì sao giá hợp lý'};
+  const tn={pro:'chuyên nghiệp, đáng tin cậy',friendly:'thân thiện, gần gũi',urgent:'tạo urgency nhẹ nhàng, khan hiếm'};
+  const li=lead?`Khách: ${lead.name}|${lead.purpose||''}|${lead.notes}`:'Không có khách cụ thể';
+  try{const txt=await callAI([{role:'user',content:`Môi giới ERA AntPlus TP.HCM. Tạo ${td2[qtype]} giọng ${tn[tone]}:\nBĐS: ${lst.title}|${lst.project||''}|${lst.price}|${lst.area}|${lst.zone}|${lst.notes}\n${li}\nChỉ trả nội dung.`}]);document.getElementById('qprev').textContent=txt;}catch(e){document.getElementById('qprev').textContent='Lỗi AI. Thử lại!'}
+  document.getElementById('qgs').style.display='none';
+}
+function copyQuote(){const t=document.getElementById('qprev').textContent;if(t&&!t.startsWith('Chọn'))navigator.clipboard?.writeText(t).then(()=>alert('Đã copy!')).catch(()=>alert('Ctrl+A rồi Ctrl+C để copy thủ công'))}
+
+/* ── MODAL ADD ── */
+let mType='';
+function openAdd(){
+  mType=cur==='listings'?'listing':'lead';
+  document.getElementById('m-t').textContent=mType==='listing'?'Thêm BĐS ký gửi':'Thêm khách hàng';
+  document.getElementById('m-b').innerHTML=mType==='listing'?lsForm():lForm();
+  document.getElementById('mo').classList.add('on');
+}
+function lForm(){return`<div class="fr2"><div class="fg"><label class="fl">Họ tên *</label><input id="f-nm" onblur="chkDup()"></div><div class="fg"><label class="fl">SĐT *</label><input id="f-ph" onblur="chkDup()"></div></div><div class="fr2"><div class="fg"><label class="fl">Email</label><input id="f-em"></div><div class="fg"><label class="fl">Ngày sinh</label><input id="f-bd" type="date"></div></div><div class="fr2"><div class="fg"><label class="fl">Nghề nghiệp</label><input id="f-job"></div><div class="fg"><label class="fl">Công ty</label><input id="f-co"></div></div><div class="fg"><label class="fl">Gia đình</label><input id="f-fam" placeholder="VD: Vợ + 2 con"></div><div class="sec-hd"><i class="ti ti-home" style="font-size:12px" aria-hidden="true"></i>Nhu cầu BĐS</div><div class="fr3"><div class="fg"><label class="fl">Nhu cầu</label><select id="f-ty"><option value="buy">Mua</option><option value="rent">Thuê</option></select></div><div class="fg"><label class="fl">Mức độ</label><select id="f-sg"><option value="hot">HOT</option><option value="warm">Warm</option><option value="cold">Cold</option><option value="vip">VIP</option></select></div><div class="fg"><label class="fl">Mục đích</label><select id="f-pur"><option>Ở thực</option><option>Đầu tư</option><option>Cho thuê lại</option><option>Ở + đầu tư</option></select></div></div><div class="fg"><label class="fl">Ngân sách</label><input id="f-bud" placeholder="3-5 tỷ hoặc 20 tr/tháng"></div><div class="fg"><label class="fl">Khu vực quan tâm</label><input id="f-ar" placeholder="Quận 2, Thủ Đức..."></div><div class="fg"><label class="fl">Dự án quan tâm</label><input id="f-pj" placeholder="Vinhomes Grand Park, Masteri..."></div><div class="fg"><label class="fl">Ghi chú nhu cầu</label><textarea id="f-no"></textarea></div><div class="dup-w" id="dup-i"></div>`}
+function lsForm(){return`<div class="fr2"><div class="fg"><label class="fl">Tên BĐS *</label><input id="f-ti"></div><div class="fg"><label class="fl">Dự án</label><input id="f-pj" placeholder="Vinhomes Grand Park..."></div></div><div class="fr3"><div class="fg"><label class="fl">Loại</label><select id="f-ty"><option value="sale">Bán</option><option value="rent">Cho thuê</option></select></div><div class="fg"><label class="fl">Trạng thái</label><select id="f-st"><option value="available">Còn trống</option><option value="pending">Đang cọc</option><option value="sold">Đã bán</option></select></div><div class="fg"><label class="fl">Khu vực</label><input id="f-zo"></div></div><div class="fr2"><div class="fg"><label class="fl">Giá</label><input id="f-pr" placeholder="5.5 tỷ hoặc 22 tr/tháng"></div><div class="fg"><label class="fl">Diện tích</label><input id="f-ar" placeholder="75m²"></div></div><div class="fr2"><div class="fg"><label class="fl">Tên chủ nhà</label><input id="f-ow" onblur="chkDup()"></div><div class="fg"><label class="fl">SĐT chủ nhà</label><input id="f-ph" onblur="chkDup()"></div></div><div class="fg"><label class="fl">Link ảnh (tùy chọn)</label><input id="f-img" placeholder="https://..."></div><div class="fg"><label class="fl">Mô tả chi tiết</label><textarea id="f-no"></textarea></div><div class="dup-w" id="dup-i"></div>`}
+function chkDup(){
+  const dw=document.getElementById('dup-i');if(!dw)return;
+  if(mType==='lead'){const ph=(document.getElementById('f-ph')?.value||'').replace(/\s/g,'');const nm=(document.getElementById('f-nm')?.value||'').toLowerCase();const dups=leads.filter(l=>(ph&&l.phone.replace(/\s/g,'')===ph)||(nm.length>2&&l.name.toLowerCase().includes(nm)));dw.style.display=dups.length?'block':'none';if(dups.length)dw.innerHTML=`⚠️ Có thể trùng: <strong>${dups.map(d=>d.name).join(', ')}</strong>`}
+  else{const ow=(document.getElementById('f-ow')?.value||'').toLowerCase();const ph=(document.getElementById('f-ph')?.value||'').replace(/\s/g,'');const dups=listings.filter(l=>(ph&&l.phone.replace(/\s/g,'')===ph)||(ow.length>2&&l.owner?.toLowerCase().includes(ow)));dw.style.display=dups.length?'block':'none';if(dups.length)dw.innerHTML=`⚠️ Chủ nhà có thể trùng: <strong>${dups.map(d=>d.title).join(', ')}</strong>`}
+}
+function saveMo(){
+  const g=id=>document.getElementById(id)?.value?.trim()||'';
+  if(mType==='lead'){if(!g('f-nm')||!g('f-ph'))return alert('Cần nhập họ tên và SĐT');leads.push({id:Date.now(),name:g('f-nm'),phone:g('f-ph'),email:g('f-em'),birthday:g('f-bd'),job:g('f-job'),company:g('f-co'),family:g('f-fam'),segment:g('f-sg'),type:g('f-ty'),budget:g('f-bud'),area:g('f-ar'),projects:g('f-pj'),purpose:g('f-pur'),notes:g('f-no'),postTxnStatus:'',txnHistory:[],lastContact:td(),history:[{date:tdf(),note:'Thêm mới'}]});}
+  else{if(!g('f-ti'))return alert('Cần nhập tên BĐS');const imgs=g('f-img')?[g('f-img')]:[];listings.push({id:Date.now(),title:g('f-ti'),project:g('f-pj'),type:g('f-ty'),status:g('f-st'),price:g('f-pr'),priceNum:0,area:g('f-ar'),zone:g('f-zo'),owner:g('f-ow'),phone:g('f-ph'),notes:g('f-no'),images:imgs,updated:td(),history:[{date:tdf(),note:'Thêm mới'}]});}
+  saveD();closeMo();renderMain();
+}
+function closeMo(){document.getElementById('mo').classList.remove('on')}
+
+function doSearch(q){srQ=q.toLowerCase();renderMain()}
+function delL(id){if(confirm('Xóa khách hàng này?')){leads=leads.filter(l=>l.id!==id);saveD();closePanel();renderMain()}}
+function delLS(id){if(confirm('Xóa BĐS này?')){listings=listings.filter(l=>l.id!==id);saveD();closePanel();renderMain()}}
+
+function exportCSV(type){
+  let rows,headers;
+  if(type==='leads'){headers=['Tên','SĐT','Email','Ngày sinh','Nghề','Công ty','Gia đình','Phân loại','Nhu cầu','Ngân sách','Khu vực','Dự án QT','Mục đích','Ghi chú','Liên hệ cuối','Sau GD'];rows=leads.map(l=>[l.name,l.phone,l.email,l.birthday,l.job,l.company,l.family,l.segment,l.type==='buy'?'Mua':'Thuê',l.budget,l.area,l.projects,l.purpose,l.notes,l.lastContact,l.postTxnStatus])}
+  else{headers=['Tên BĐS','Dự án','Loại','Giá','DT','Khu vực','Trạng thái','Chủ nhà','SĐT','Mô tả','Cập nhật'];rows=listings.map(l=>[l.title,l.project,l.type==='sale'?'Bán':'Thuê',l.price,l.area,l.zone,l.status,l.owner,l.phone,l.notes,l.updated])}
+  const csv=[headers,...rows].map(r=>r.map(v=>`"${(v||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download=`ERA_${type}_${td()}.csv`;a.click();
+}
+
+loadAll();renderMain();
+</script>
+</body>
+</html>
